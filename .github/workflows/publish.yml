@@ -1,12 +1,6 @@
-name: Publish to NuGet
-
-on:
-  push:
-    branches: [main]
-
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 jobs:
   publish:
@@ -23,6 +17,14 @@ jobs:
 
       - run: dotnet pack src/OfxFileReader/OfxFileReader.csproj -c Release -o ./artifacts
 
-      - run: |
+      - name: Login to NuGet (Trusted Publishing)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: Jonata
+
+      - name: Push package
+        run: |
           dotnet nuget push "./artifacts/*.nupkg" \
-            --source https://api.nuget.org/v3/index.json
+            --source https://api.nuget.org/v3/index.json \
+            --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
