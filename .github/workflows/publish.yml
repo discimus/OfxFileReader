@@ -1,3 +1,10 @@
+name: Publish to NuGet
+
+on:
+  push:
+    branches:
+      - main
+
 permissions:
   contents: read
   id-token: write
@@ -7,24 +14,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
 
-      - run: dotnet restore
+      - name: Restore
+        run: dotnet restore src/OfxFileReader/OfxFileReader.csproj
 
-      - run: dotnet pack src/OfxFileReader/OfxFileReader.csproj -c Release -o ./artifacts
+      - name: Build
+        run: dotnet build src/OfxFileReader/OfxFileReader.csproj --configuration Release --no-restore
 
-      - name: Login to NuGet (Trusted Publishing)
-        id: login
+      - name: Pack
+        run: dotnet pack src/OfxFileReader/OfxFileReader.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: Authenticate with NuGet (Trusted Publishing)
         uses: NuGet/login@v1
+        id: login
         with:
           user: Jonata
 
-      - name: Push package
-        run: |
-          dotnet nuget push "./artifacts/*.nupkg" \
-            --source https://api.nuget.org/v3/index.json \
-            --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+      - name: Publish
+        run: >
+          dotnet nuget push "./artifacts/*.nupkg"
+          --source https://api.nuget.org/v3/index.json
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
