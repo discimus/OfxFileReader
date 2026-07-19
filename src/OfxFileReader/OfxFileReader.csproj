@@ -3,24 +3,32 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageId>OfxFileReader</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>Jonata Silva</Authors>
-	<Description>Library for reading OFX files in .NET Core</Description>
-	<PackageTags>ofx;banking;finance</PackageTags>
-	<PackageProjectUrl>https://github.com/discimus/OfxFileReader</PackageProjectUrl>
-	<RepositoryUrl>https://github.com/discimus/OfxFileReader</RepositoryUrl>
+    <Description>Library for reading OFX files in .NET Core</Description>
+    <PackageTags>ofx;banking;finance</PackageTags>
+    <PackageProjectUrl>https://github.com/discimus/OfxFileReader</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/discimus/OfxFileReader</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <Deterministic>true</Deterministic>
     <AnalysisLevel>latest-All</AnalysisLevel>
-</PropertyGroup>
+  </PropertyGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>OfxFileReader.Tests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.svg" Pack="false" PackagePath="\" />
+    <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
