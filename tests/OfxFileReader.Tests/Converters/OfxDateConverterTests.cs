@@ -2,6 +2,7 @@ using OfxFileReader.Parsing.Converters;
 
 namespace OfxFileReader.Tests.Converters;
 
+/// <summary>Tests for the OFX date converter.</summary>
 public class OfxDateConverterTests
 {
     [Theory]
@@ -11,6 +12,7 @@ public class OfxDateConverterTests
     [InlineData(null, null)]
     [InlineData("", null)]
     [InlineData("   ", null)]
+    /// <summary>Verifies that various OFX date formats are parsed correctly.</summary>
     public void Parse_VariousFormats_ReturnsExpected(string? input, string? expected)
     {
         var result = OfxDateConverter.Parse(input);
@@ -25,6 +27,7 @@ public class OfxDateConverterTests
         }
     }
 
+    /// <summary>Verifies that timezone offsets are parsed correctly.</summary>
     [Fact]
     public void Parse_WithTimezoneOffset_ReturnsCorrectOffset()
     {
@@ -33,6 +36,7 @@ public class OfxDateConverterTests
         Assert.Equal(-5, result.Value.Offset.Hours);
     }
 
+    /// <summary>Verifies that invalid date strings return null.</summary>
     [Fact]
     public void Parse_InvalidDate_ReturnsNull()
     {

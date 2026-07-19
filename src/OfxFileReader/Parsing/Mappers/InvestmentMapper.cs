@@ -6,8 +6,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Parsing.Mappers;
 
+/// <summary>Maps SGML parse tree nodes for investment data into domain models.</summary>
 internal static class InvestmentMapper
 {
+    /// <summary>Maps an INVSTMTRS SGML node to an <see cref="InvestmentStatement"/>.</summary>
     public static InvestmentStatement? MapStatement(SgmlNode invmtrs, IOfxLogger logger)
     {
         try
@@ -136,6 +138,7 @@ internal static class InvestmentMapper
         }
     }
 
+    /// <summary>Maps an INVACCTFROM SGML node to an <see cref="InvestmentAccount"/>.</summary>
     private static InvestmentAccount? MapAccount(SgmlNode? acctNode)
     {
         if (acctNode is null) return null;
@@ -144,6 +147,7 @@ internal static class InvestmentMapper
         return new InvestmentAccount(brokerId, acctId);
     }
 
+    /// <summary>Maps a buy/sell transaction SGML node and adds it to the transactions list.</summary>
     private static void AddBuySell(SgmlNode trn, List<InvestmentTransaction> transactions, IOfxLogger logger)
     {
         var tx = MapInvestmentTransaction(trn, logger);
@@ -151,6 +155,7 @@ internal static class InvestmentMapper
             transactions.Add(tx);
     }
 
+    /// <summary>Maps an investment transaction SGML node to an <see cref="InvestmentTransaction"/>.</summary>
     private static InvestmentTransaction? MapInvestmentTransaction(SgmlNode trn, IOfxLogger logger)
     {
         try
@@ -203,6 +208,7 @@ internal static class InvestmentMapper
         }
     }
 
+    /// <summary>Maps an INVPOS SGML node to an <see cref="InvestmentPosition"/>.</summary>
     private static InvestmentPosition? MapPosition(SgmlNode pos, IOfxLogger logger)
     {
         try

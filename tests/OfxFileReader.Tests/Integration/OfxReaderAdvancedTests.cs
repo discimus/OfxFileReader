@@ -2,10 +2,12 @@ using OfxFileReader.Models.Common.Enums;
 
 namespace OfxFileReader.Tests.Integration;
 
+/// <summary>Advanced integration tests for edge cases and special scenarios.</summary>
 public class OfxReaderAdvancedTests
 {
     private static readonly string FixturesDir = Path.Combine(AppContext.BaseDirectory, "Fixtures");
 
+    /// <summary>Verifies that multiple OFX blocks in a single file are all parsed.</summary>
     [Fact]
     public void Read_MultipleOfxBlocks_ParsesAllStatements()
     {
@@ -28,6 +30,7 @@ public class OfxReaderAdvancedTests
         Assert.Equal(1000.00m, second.Transactions[0].Amount);
     }
 
+    /// <summary>Verifies that a full investment V2 file with transactions and positions is parsed.</summary>
     [Fact]
     public void Read_InvestmentV2Full_ParsesTransactionsAndPositions()
     {
@@ -66,6 +69,7 @@ public class OfxReaderAdvancedTests
         Assert.Equal(5000.00m, inv.AvailableCash.Amount);
     }
 
+    /// <summary>Verifies that a full loan V2 file with all fields is parsed.</summary>
     [Fact]
     public void Read_LoanV2Full_ParsesAllFields()
     {
@@ -99,6 +103,7 @@ public class OfxReaderAdvancedTests
         Assert.Equal(3000.00m, loan.InterestYearToDate);
     }
 
+    /// <summary>Verifies that the header correctly detects XML format.</summary>
     [Fact]
     public void Read_HeaderDetectsXmlFormat_Correctly()
     {
@@ -111,6 +116,7 @@ public class OfxReaderAdvancedTests
         Assert.NotNull(doc.BankStatements);
     }
 
+    /// <summary>Verifies that reading from a stream respects the configured encoding.</summary>
     [Fact]
     public void Read_FromStreamWithOptions_RespectsEncoding()
     {
@@ -129,6 +135,7 @@ public class OfxReaderAdvancedTests
         Assert.Equal(2, doc.BankStatements.Count);
     }
 
+    /// <summary>Verifies that async reads do not deadlock (ConfigureAwait used correctly).</summary>
     [Fact]
     public async Task ReadAsync_UsesConfigureAwait_NoDeadlock()
     {
@@ -141,6 +148,7 @@ public class OfxReaderAdvancedTests
         Assert.NotNull(doc.BankStatements);
     }
 
+    /// <summary>Verifies that null or empty file paths throw the appropriate exception.</summary>
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -157,6 +165,7 @@ public class OfxReaderAdvancedTests
         }
     }
 
+    /// <summary>Verifies that currency is set when CURDEF is present in the fixture.</summary>
     [Fact]
     public void DefaultCurrency_IsNull_WhenNotSpecified()
     {
@@ -174,6 +183,7 @@ public class OfxReaderAdvancedTests
         }
     }
 
+    /// <summary>Verifies that multiple OFX blocks produce correct metadata counts.</summary>
     [Fact]
     public void MultipleOfxBlocks_AllBranchesCovered()
     {

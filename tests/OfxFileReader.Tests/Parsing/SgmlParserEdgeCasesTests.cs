@@ -2,8 +2,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Tests.Parsing;
 
+/// <summary>Edge case tests for the SGML tokenizer and tree builder.</summary>
 public class SgmlParserEdgeCasesTests
 {
+    /// <summary>Verifies that self-closing tags are tokenized as open tags.</summary>
     [Fact]
     public void Tokenize_SelfClosingTag_ReturnsOpenTag()
     {
@@ -15,6 +17,7 @@ public class SgmlParserEdgeCasesTests
         Assert.Equal("TAG", tokens[0].Value);
     }
 
+    /// <summary>Verifies that newlines within text content are preserved.</summary>
     [Fact]
     public void Tokenize_NewlinesInContent_HandlesCorrectly()
     {
@@ -26,6 +29,7 @@ public class SgmlParserEdgeCasesTests
         Assert.Equal("Line1\nLine2\nLine3", tokens[1].Value);
     }
 
+    /// <summary>Verifies that a tag without a closing angle bracket returns empty tokens.</summary>
     [Fact]
     public void Tokenize_TagWithoutClosingAngleBracket_ReturnsEmpty()
     {
@@ -35,6 +39,7 @@ public class SgmlParserEdgeCasesTests
         Assert.Empty(tokens);
     }
 
+    /// <summary>Verifies that whitespace-only text content is omitted from tokens.</summary>
     [Fact]
     public void Tokenize_OnlyWhitespaceContent_ReturnsEmpty()
     {
@@ -47,6 +52,7 @@ public class SgmlParserEdgeCasesTests
         Assert.Equal(SgmlTokenType.CloseTag, tokens[1].Type);
     }
 
+    /// <summary>Verifies that text containing angle brackets does not crash the tokenizer.</summary>
     [Fact]
     public void Tokenize_TextWithAngleBrackets_HandlesCorrectly()
     {
@@ -58,6 +64,7 @@ public class SgmlParserEdgeCasesTests
         Assert.NotEmpty(tokens);
     }
 
+    /// <summary>Verifies that an unmatched close tag does not crash the tree builder.</summary>
     [Fact]
     public void TreeBuilder_UnmatchedCloseTag_DoesNotCrash()
     {
@@ -75,6 +82,7 @@ public class SgmlParserEdgeCasesTests
         Assert.Equal("OUTER", builder.Root.Name);
     }
 
+    /// <summary>Verifies that an extra close tag does not crash the tree builder.</summary>
     [Fact]
     public void TreeBuilder_ExtraCloseTag_DoesNotCrash()
     {
@@ -91,6 +99,7 @@ public class SgmlParserEdgeCasesTests
         Assert.NotNull(builder.Root);
     }
 
+    /// <summary>Verifies that multiple root-level nodes are wrapped in a virtual container.</summary>
     [Fact]
     public void TreeBuilder_ThreeSiblingRoots_WrapsCorrectly()
     {
@@ -114,6 +123,7 @@ public class SgmlParserEdgeCasesTests
         Assert.All(builder.Root.Children, c => Assert.Equal("OFX", c.Name));
     }
 
+    /// <summary>Verifies that implicit close works correctly with grandparent elements.</summary>
     [Fact]
     public void TreeBuilder_ImplicitCloseWithGrandparent_Works()
     {

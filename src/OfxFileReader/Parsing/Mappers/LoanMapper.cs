@@ -7,8 +7,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Parsing.Mappers;
 
+/// <summary>Maps SGML parse tree nodes for loan data into domain models.</summary>
 internal static class LoanMapper
 {
+    /// <summary>Maps a LOANSTMTRS SGML node to a <see cref="LoanStatement"/>.</summary>
     public static LoanStatement? MapStatement(SgmlNode loanmtrs, IOfxLogger logger)
     {
         try
@@ -77,6 +79,7 @@ internal static class LoanMapper
         }
     }
 
+    /// <summary>Maps a LOANACCTFROM SGML node to a <see cref="LoanAccount"/>.</summary>
     private static LoanAccount? MapAccount(SgmlNode? acctNode)
     {
         if (acctNode is null) return null;
@@ -92,6 +95,7 @@ internal static class LoanMapper
         return new LoanAccount(bankId, acctId, loanType);
     }
 
+    /// <summary>Maps a LOANTRN SGML node to a <see cref="LoanTransaction"/>.</summary>
     private static LoanTransaction? MapTransaction(SgmlNode trn, IOfxLogger logger)
     {
         try

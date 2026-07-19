@@ -4,16 +4,26 @@ using OfxFileReader.Exceptions;
 
 namespace OfxFileReader.Parsing;
 
+/// <summary>Result of parsing an OFX header, containing the header and remaining content.</summary>
 internal sealed class OfxHeaderParseResult
 {
+    /// <summary>Gets the parsed OFX header information.</summary>
     public OfxHeader Header { get; init; } = null!;
+
+    /// <summary>Gets the content remaining after the header section.</summary>
     public string RemainingContent { get; init; } = string.Empty;
+
+    /// <summary>Gets whether the header was an XML-style declaration.</summary>
     public bool IsXmlDeclaration { get; init; }
+
+    /// <summary>Gets whether the content is in XML format.</summary>
     public bool IsXmlFormat { get; init; }
 }
 
+/// <summary>Provides static methods for parsing OFX file headers.</summary>
 internal static class HeaderParser
 {
+    /// <summary>Parses the OFX header from the beginning of the content string.</summary>
     public static OfxHeaderParseResult Parse(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
@@ -73,6 +83,7 @@ internal static class HeaderParser
         };
     }
 
+    /// <summary>Maps a dictionary of header field key-value pairs to an <see cref="OfxHeader"/> record.</summary>
     private static OfxHeader MapToHeader(Dictionary<string, string> fields)
     {
         _ = int.TryParse(fields.GetValueOrDefault("OFXHEADER"), out var ofxHeaderValue);
@@ -92,6 +103,7 @@ internal static class HeaderParser
             compression, oldFileUid, newFileUid);
     }
 
+    /// <summary>Determines the OFX version from header values and data type.</summary>
     private static OfxVersion DetermineVersion(int ofxHeaderValue, string versionStr, string data)
     {
         if (ofxHeaderValue >= 200 || versionStr.StartsWith("2") ||
@@ -109,6 +121,7 @@ internal static class HeaderParser
         return OfxVersion.Unknown;
     }
 
+    /// <summary>Determines whether the content uses the XML OFX format.</summary>
     public static bool IsXmlContent(string content)
     {
         return content.Contains("<?OFX", StringComparison.OrdinalIgnoreCase) ||

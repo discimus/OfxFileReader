@@ -2,6 +2,7 @@ using OfxFileReader.Models.Common.Enums;
 
 namespace OfxFileReader.Parsing.Converters;
 
+/// <summary>Converts OFX transaction type strings to <see cref="TransactionType"/> enum values.</summary>
 internal static class TransactionTypeConverter
 {
     private static readonly Dictionary<string, TransactionType> Map = new(StringComparer.OrdinalIgnoreCase)
@@ -25,6 +26,7 @@ internal static class TransactionTypeConverter
         ["OTHER"] = TransactionType.Other,
     };
 
+    /// <summary>Parses an OFX transaction type string into a <see cref="TransactionType"/>.</summary>
     public static TransactionType Parse(string? value)
     {
         if (value is not null && Map.TryGetValue(value.Trim(), out var type))

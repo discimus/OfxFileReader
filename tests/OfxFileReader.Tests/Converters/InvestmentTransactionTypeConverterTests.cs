@@ -3,6 +3,7 @@ using OfxFileReader.Parsing.Converters;
 
 namespace OfxFileReader.Tests.Converters;
 
+/// <summary>Tests for the investment transaction type converter.</summary>
 public class InvestmentTransactionTypeConverterTests
 {
     [Theory]
@@ -29,6 +30,7 @@ public class InvestmentTransactionTypeConverterTests
     [InlineData("MISCINCOME", InvestmentTransactionType.MiscIncome)]
     [InlineData("buystock", InvestmentTransactionType.Buy)]
     [InlineData("BuyStock", InvestmentTransactionType.Buy)]
+    /// <summary>Verifies that all known investment transaction types map correctly.</summary>
     public void Parse_AllKnownTypes_ReturnsCorrectEnum(string input, InvestmentTransactionType expected)
     {
         var result = InvestmentTransactionTypeConverter.Parse(input);
@@ -39,6 +41,7 @@ public class InvestmentTransactionTypeConverterTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("NONSENSE")]
+    /// <summary>Verifies that invalid input returns Unknown.</summary>
     public void Parse_InvalidInput_ReturnsUnknown(string? input)
     {
         var result = InvestmentTransactionTypeConverter.Parse(input);

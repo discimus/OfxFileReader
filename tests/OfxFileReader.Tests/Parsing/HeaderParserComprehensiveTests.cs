@@ -3,8 +3,10 @@ using OfxFileReader.Parsing;
 
 namespace OfxFileReader.Tests.Parsing;
 
+/// <summary>Comprehensive edge case tests for the OFX header parser.</summary>
 public class HeaderParserComprehensiveTests
 {
+    /// <summary>Verifies that VERSION 200 with SGML data returns V2x.</summary>
     [Fact]
     public void Parse_Version200WithSgmlData_ReturnsV2x()
     {
@@ -14,6 +16,7 @@ public class HeaderParserComprehensiveTests
         Assert.False(result.IsXmlFormat);
     }
 
+    /// <summary>Verifies that a minimal XML declaration header is parsed correctly.</summary>
     [Fact]
     public void Parse_XmlDeclarationMinimal_Works()
     {
@@ -24,6 +27,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(OfxVersion.V2x, result.Header.Version);
     }
 
+    /// <summary>Verifies that a non-numeric OFXHEADER value defaults to zero.</summary>
     [Fact]
     public void Parse_NonNumericOfxHeader_DefaultsToZero()
     {
@@ -32,6 +36,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(0, result.Header.OfxHeaderValue);
     }
 
+    /// <summary>Verifies that a missing OFXHEADER key applies default values.</summary>
     [Fact]
     public void Parse_MissingOfxHeaderKey_DefaultsApplied()
     {
@@ -41,6 +46,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal("OFXSGML", result.Header.Data);
     }
 
+    /// <summary>Verifies that when no OFX tag exists, the remaining content is the original.</summary>
     [Fact]
     public void Parse_NoOfxTag_RemainingContentIsOriginal()
     {
@@ -49,6 +55,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(content, result.RemainingContent);
     }
 
+    /// <summary>Verifies that empty header values do not crash the parser.</summary>
     [Fact]
     public void Parse_EmptyHeaderValues_DoesNotCrash()
     {
@@ -57,6 +64,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(0, result.Header.OfxHeaderValue);
     }
 
+    /// <summary>Verifies that DATA:OFXXML sets the IsXmlFormat flag.</summary>
     [Fact]
     public void Parse_DataOfxXml_IsXmlFormat()
     {
@@ -65,6 +73,7 @@ public class HeaderParserComprehensiveTests
         Assert.True(result.IsXmlFormat);
     }
 
+    /// <summary>Verifies that VERSION 151 returns V1x.</summary>
     [Fact]
     public void Parse_Version151_ReturnsV1x()
     {
@@ -73,6 +82,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(OfxVersion.V1x, result.Header.Version);
     }
 
+    /// <summary>Verifies that VERSION 220 returns V2x.</summary>
     [Fact]
     public void Parse_Version220_ReturnsV2x()
     {
@@ -81,6 +91,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(OfxVersion.V2x, result.Header.Version);
     }
 
+    /// <summary>Verifies that duplicate header keys use the last value.</summary>
     [Fact]
     public void Parse_DuplicateHeaderKeys_LastWins()
     {
@@ -89,6 +100,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(200, result.Header.OfxHeaderValue);
     }
 
+    /// <summary>Verifies that header values with extra whitespace are trimmed.</summary>
     [Fact]
     public void Parse_HeadersWithExtraWhitespace_TrimsValues()
     {
@@ -97,6 +109,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(OfxVersion.V1x, result.Header.Version);
     }
 
+    /// <summary>Verifies that malformed header lines without colons are ignored.</summary>
     [Fact]
     public void Parse_MalformedLine_IgnoresLine()
     {
@@ -106,6 +119,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(OfxVersion.V1x, result.Header.Version);
     }
 
+    /// <summary>Verifies that UTF-8 charset (65001) is parsed correctly.</summary>
     [Fact]
     public void Parse_CharsetUtf8_ParsesCorrectly()
     {
@@ -114,6 +128,7 @@ public class HeaderParserComprehensiveTests
         Assert.Equal(65001, result.Header.Charset);
     }
 
+    /// <summary>Verifies that OLDFILEUID and NEWFILEUID are parsed correctly.</summary>
     [Fact]
     public void Parse_OldAndNewFileUid_NotEmpty()
     {

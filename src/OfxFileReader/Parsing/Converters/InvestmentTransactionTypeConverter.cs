@@ -2,6 +2,7 @@ using OfxFileReader.Models.Common.Enums;
 
 namespace OfxFileReader.Parsing.Converters;
 
+/// <summary>Converts OFX investment transaction type strings to <see cref="InvestmentTransactionType"/> enum values.</summary>
 internal static class InvestmentTransactionTypeConverter
 {
     private static readonly Dictionary<string, InvestmentTransactionType> Map = new(StringComparer.OrdinalIgnoreCase)
@@ -29,6 +30,7 @@ internal static class InvestmentTransactionTypeConverter
         ["MISCINCOME"] = InvestmentTransactionType.MiscIncome,
     };
 
+    /// <summary>Parses an OFX investment transaction type string into an <see cref="InvestmentTransactionType"/>.</summary>
     public static InvestmentTransactionType Parse(string? value)
     {
         if (value is not null && Map.TryGetValue(value.Trim(), out var type))

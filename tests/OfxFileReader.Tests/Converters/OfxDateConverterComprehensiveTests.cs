@@ -2,6 +2,7 @@ using OfxFileReader.Parsing.Converters;
 
 namespace OfxFileReader.Tests.Converters;
 
+/// <summary>Comprehensive edge case tests for the OFX date converter.</summary>
 public class OfxDateConverterComprehensiveTests
 {
     [Theory]
@@ -15,6 +16,7 @@ public class OfxDateConverterComprehensiveTests
     [InlineData("2024101514", null)]  // 10-digit YYYYMMDDHH not supported
     [InlineData("20241015143022.000[+0:UTC]", "2024-10-15T14:30:22+00:00")]
     [InlineData("20241015143022[-7:PDT]", "2024-10-15T14:30:22-07:00")]
+    /// <summary>Verifies that various OFX date formats with timezone are parsed correctly.</summary>
     public void Parse_VariousFormats_ReturnsExpected(string? input, string? expected)
     {
         var result = OfxDateConverter.Parse(input);
@@ -29,6 +31,7 @@ public class OfxDateConverterComprehensiveTests
         }
     }
 
+    /// <summary>Verifies that an invalid date (e.g., Feb 30) returns null.</summary>
     [Fact]
     public void Parse_InvalidDate_ReturnsNull()
     {
@@ -36,15 +39,16 @@ public class OfxDateConverterComprehensiveTests
         Assert.Null(result);
     }
 
+    /// <summary>Verifies that only the first bracket pair is used for timezone parsing.</summary>
     [Fact]
     public void Parse_MultipleBrackets_ParsesFirstOnly()
     {
-        // Edge case: content after the bracket pair is ignored
         var result = OfxDateConverter.Parse("20241015143022.000[-5][EXTRA]");
         Assert.NotNull(result);
         Assert.Equal(-5, result.Value.Offset.Hours);
     }
 
+    /// <summary>Verifies that a positive timezone offset is parsed correctly.</summary>
     [Fact]
     public void Parse_PositiveTimezone_Works()
     {
@@ -53,6 +57,7 @@ public class OfxDateConverterComprehensiveTests
         Assert.Equal(2, result.Value.Offset.Hours);
     }
 
+    /// <summary>Verifies that a zero timezone offset is parsed correctly.</summary>
     [Fact]
     public void Parse_ZeroTimezone_Works()
     {

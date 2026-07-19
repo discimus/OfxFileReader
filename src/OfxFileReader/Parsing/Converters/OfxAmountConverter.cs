@@ -2,8 +2,10 @@ using System.Globalization;
 
 namespace OfxFileReader.Parsing.Converters;
 
+/// <summary>Provides helper methods for converting OFX amount strings to <see cref="decimal"/> values.</summary>
 internal static class OfxAmountConverter
 {
+    /// <summary>Parses an OFX amount string into a nullable decimal.</summary>
     public static decimal? Parse(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))

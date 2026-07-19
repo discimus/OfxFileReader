@@ -6,10 +6,12 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Tests.Mappers;
 
+/// <summary>Tests for the sign-on response SGML mapper.</summary>
 public class SignOnMapperTests
 {
     private static readonly IOfxLogger Logger = NullOfxLogger.Instance;
 
+    /// <summary>Helper method to create an SGML node with an optional value.</summary>
     private static SgmlNode CreateNode(string name, string? value = null)
     {
         var node = new SgmlNode(name);
@@ -18,6 +20,7 @@ public class SignOnMapperTests
         return node;
     }
 
+    /// <summary>Verifies that a complete valid SONRS node maps correctly.</summary>
     [Fact]
     public void Map_CompleteValid_ReturnsSignOn()
     {
@@ -50,6 +53,7 @@ public class SignOnMapperTests
         Assert.Equal("ABC123", result.SessionCookie);
     }
 
+    /// <summary>Verifies that a missing STATUS node uses default values.</summary>
     [Fact]
     public void Map_MissingStatus_UsesDefaults()
     {
@@ -63,6 +67,7 @@ public class SignOnMapperTests
         Assert.Equal(SeverityType.Info, result.Status.Severity);
     }
 
+    /// <summary>Verifies that a missing FI node results in a null financial institution.</summary>
     [Fact]
     public void Map_MissingFi_FinancialInstitutionIsNull()
     {
@@ -76,6 +81,7 @@ public class SignOnMapperTests
         Assert.Null(result.FinancialInstitution);
     }
 
+    /// <summary>Verifies that error status codes are parsed correctly.</summary>
     [Fact]
     public void Map_ErrorStatus_ParsesCorrectly()
     {

@@ -12,15 +12,18 @@ using OfxFileReader.Parsing.Mappers;
 
 namespace OfxFileReader.Parsing.Sgml;
 
+/// <summary>Parses SGML-format OFX content into an <see cref="OfxDocument"/>.</summary>
 internal sealed class SgmlOfxParser
 {
     private readonly IOfxLogger _logger;
 
+    /// <summary>Initializes a new instance with an optional logger.</summary>
     public SgmlOfxParser(IOfxLogger? logger = null)
     {
         _logger = logger ?? NullOfxLogger.Instance;
     }
 
+    /// <summary>Parses SGML OFX content into a structured document.</summary>
     public OfxDocument Parse(string content)
     {
         var headerResult = HeaderParser.Parse(content);
@@ -95,6 +98,7 @@ internal sealed class SgmlOfxParser
         );
     }
 
+    /// <summary>Finds all &lt;OFX&gt; nodes in the parse tree.</summary>
     private static List<SgmlNode> FindAllOfxNodes(SgmlNode root)
     {
         var result = new List<SgmlNode>();
@@ -102,6 +106,7 @@ internal sealed class SgmlOfxParser
         return result;
     }
 
+    /// <summary>Recursively searches for &lt;OFX&gt; nodes starting from the given node.</summary>
     private static void FindAllOfxNodesRecursive(SgmlNode node, List<SgmlNode> result)
     {
         if (string.Equals(node.Name, "OFX", StringComparison.OrdinalIgnoreCase))
@@ -114,6 +119,7 @@ internal sealed class SgmlOfxParser
             FindAllOfxNodesRecursive(child, result);
     }
 
+    /// <summary>Parses the sign-on response (SONRS) from the OFX node.</summary>
     private SignOnResponse? ParseSignOn(SgmlNode ofxNode)
     {
         var signonMsgs = ofxNode.FindChild("SIGNONMSGSRSV1");
@@ -133,6 +139,7 @@ internal sealed class SgmlOfxParser
         return SignOnMapper.Map(sonrs, _logger);
     }
 
+    /// <summary>Parses bank statements (BANKMSGSRSV1) from the OFX node.</summary>
     private List<BankStatement>? ParseBankStatements(SgmlNode ofxNode)
     {
         var bankMsgs = ofxNode.FindChild("BANKMSGSRSV1");
@@ -156,6 +163,7 @@ internal sealed class SgmlOfxParser
         return statements;
     }
 
+    /// <summary>Parses credit card statements (CREDITCARDMSGSRSV1) from the OFX node.</summary>
     private List<CreditCardStatement>? ParseCreditCardStatements(SgmlNode ofxNode)
     {
         var ccMsgs = ofxNode.FindChild("CREDITCARDMSGSRSV1");
@@ -179,6 +187,7 @@ internal sealed class SgmlOfxParser
         return statements;
     }
 
+    /// <summary>Parses investment statements (INVSTMTMSGSRSV1) from the OFX node.</summary>
     private List<InvestmentStatement>? ParseInvestmentStatements(SgmlNode ofxNode)
     {
         var invMsgs = ofxNode.FindChild("INVSTMTMSGSRSV1");
@@ -202,6 +211,7 @@ internal sealed class SgmlOfxParser
         return statements;
     }
 
+    /// <summary>Parses loan statements (LOANMSGSRSV1) from the OFX node.</summary>
     private List<LoanStatement>? ParseLoanStatements(SgmlNode ofxNode)
     {
         var loanMsgs = ofxNode.FindChild("LOANMSGSRSV1");

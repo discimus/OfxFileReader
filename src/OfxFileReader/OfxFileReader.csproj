@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageId>OfxFileReader</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Jonata Silva</Authors>
 	<Description>Library for reading OFX files in .NET Core</Description>
 	<PackageTags>ofx;banking;finance</PackageTags>

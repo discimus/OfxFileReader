@@ -7,22 +7,26 @@ using OfxFileReader.Parsing.Xml;
 
 namespace OfxFileReader;
 
+/// <summary>Default reader for parsing OFX financial files from various input sources.</summary>
 public sealed class OfxReader : IOfxReader
 {
     private readonly OfxReaderOptions _options;
     private readonly IOfxLogger _logger;
 
+    /// <summary>Initializes a new instance with default options.</summary>
     public OfxReader()
         : this(OfxReaderOptions.Default)
     {
     }
 
+    /// <summary>Initializes a new instance with the specified options.</summary>
     public OfxReader(OfxReaderOptions options)
     {
         _options = options ?? OfxReaderOptions.Default;
         _logger = options.Logger ?? NullOfxLogger.Instance;
     }
 
+    /// <summary>Reads and parses an OFX file from the specified file path.</summary>
     public OfxDocument Read(string filePath)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
@@ -34,6 +38,7 @@ public sealed class OfxReader : IOfxReader
         return ParseContent(content);
     }
 
+    /// <summary>Reads and parses an OFX file from the specified stream.</summary>
     public OfxDocument Read(Stream stream)
     {
         ArgumentNullException.ThrowIfNull(stream);
@@ -43,6 +48,7 @@ public sealed class OfxReader : IOfxReader
         return ParseContent(content);
     }
 
+    /// <summary>Reads and parses an OFX file from the specified text reader.</summary>
     public OfxDocument Read(TextReader reader)
     {
         ArgumentNullException.ThrowIfNull(reader);
@@ -51,6 +57,7 @@ public sealed class OfxReader : IOfxReader
         return ParseContent(content);
     }
 
+    /// <summary>Asynchronously reads and parses an OFX file from the specified file path.</summary>
     public async Task<OfxDocument> ReadAsync(string filePath, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
@@ -62,6 +69,7 @@ public sealed class OfxReader : IOfxReader
         return ParseContent(content);
     }
 
+    /// <summary>Asynchronously reads and parses an OFX file from the specified stream.</summary>
     public async Task<OfxDocument> ReadAsync(Stream stream, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(stream);
@@ -71,6 +79,7 @@ public sealed class OfxReader : IOfxReader
         return ParseContent(content);
     }
 
+    /// <summary>Asynchronously reads and parses an OFX file from the specified text reader.</summary>
     public async Task<OfxDocument> ReadAsync(TextReader reader, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(reader);
@@ -79,6 +88,7 @@ public sealed class OfxReader : IOfxReader
         return ParseContent(content);
     }
 
+    /// <summary>Parses raw OFX content by detecting format and dispatching to the appropriate parser.</summary>
     private OfxDocument ParseContent(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
@@ -123,6 +133,7 @@ public sealed class OfxReader : IOfxReader
         return document;
     }
 
+    /// <summary>Attempts to parse the OFX header from the content string.</summary>
     private static OfxHeaderParseResult TryParseHeader(string content, out OfxHeader header)
     {
         var result = HeaderParser.Parse(content);

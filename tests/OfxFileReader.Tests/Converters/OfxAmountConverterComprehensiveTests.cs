@@ -2,6 +2,7 @@ using OfxFileReader.Parsing.Converters;
 
 namespace OfxFileReader.Tests.Converters;
 
+/// <summary>Comprehensive edge case tests for the OFX amount converter.</summary>
 public class OfxAmountConverterComprehensiveTests
 {
     [Theory]
@@ -12,6 +13,7 @@ public class OfxAmountConverterComprehensiveTests
     [InlineData("999999999999.99", 999999999999.99)]
     [InlineData("0.00", 0.00)]
     [InlineData("0", 0)]
+    /// <summary>Verifies that additional amount formats (parentheses, commas, whitespace) are handled.</summary>
     public void Parse_AdditionalFormats_ReturnsDecimal(string input, decimal expected)
     {
         var result = OfxAmountConverter.Parse(input);
@@ -25,6 +27,7 @@ public class OfxAmountConverterComprehensiveTests
     [InlineData("ABC")]
     [InlineData("--5.00")]
     [InlineData("+")]
+    /// <summary>Verifies that invalid amount strings return null.</summary>
     public void Parse_InvalidInput_ReturnsNull(string? input)
     {
         var result = OfxAmountConverter.Parse(input);

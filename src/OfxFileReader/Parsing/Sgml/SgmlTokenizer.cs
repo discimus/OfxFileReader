@@ -2,17 +2,20 @@ using System.Text;
 
 namespace OfxFileReader.Parsing.Sgml;
 
+/// <summary>Tokenizes raw SGML OFX content into a sequence of tokens (open tags, close tags, text).</summary>
 internal sealed class SgmlTokenizer
 {
     private readonly string _content;
     private int _position;
     private int _lineNumber = 1;
 
+    /// <summary>Initializes a new instance with the SGML content string.</summary>
     public SgmlTokenizer(string content)
     {
         _content = content;
     }
 
+    /// <summary>Tokenizes the content and returns a list of tokens.</summary>
     public List<SgmlToken> Tokenize()
     {
         var tokens = new List<SgmlToken>();
@@ -71,6 +74,7 @@ internal sealed class SgmlTokenizer
         return tokens;
     }
 
+    /// <summary>Finds the end of a tag (the closing &gt; character).</summary>
     private int FindTagEnd()
     {
         var pos = _position;
@@ -90,6 +94,7 @@ internal sealed class SgmlTokenizer
         return -1;
     }
 
+    /// <summary>Finds the end of a text segment (before the next &lt; character).</summary>
     private int FindTextEnd()
     {
         for (var pos = _position; pos < _content.Length; pos++)
@@ -103,6 +108,7 @@ internal sealed class SgmlTokenizer
         return _content.Length;
     }
 
+    /// <summary>Advances the position past any whitespace characters.</summary>
     private void SkipWhitespace()
     {
         while (_position < _content.Length && char.IsWhiteSpace(_content[_position]))
@@ -113,6 +119,7 @@ internal sealed class SgmlTokenizer
         }
     }
 
+    /// <summary>Placeholder for counting newlines in text (currently unused).</summary>
     private static void CountNewlines(string text)
     {
         // Line counting is done inline; this is a placeholder for clarity

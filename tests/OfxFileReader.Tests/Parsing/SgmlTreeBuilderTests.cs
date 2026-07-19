@@ -2,8 +2,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Tests.Parsing;
 
+/// <summary>Tests for the SGML tree builder functionality.</summary>
 public class SgmlTreeBuilderTests
 {
+    /// <summary>Verifies that a simple tag hierarchy builds a correct tree.</summary>
     [Fact]
     public void Build_SimpleTags_CreatesCorrectTree()
     {
@@ -22,6 +24,7 @@ public class SgmlTreeBuilderTests
         Assert.Equal("value", builder.Root.Value);
     }
 
+    /// <summary>Verifies that implicit tag closing (SGML-style) works correctly.</summary>
     [Fact]
     public void Build_ImplicitClose_HandlesCorrectly()
     {
@@ -48,6 +51,7 @@ public class SgmlTreeBuilderTests
         Assert.Equal("value2", builder.Root.Children[1].Value);
     }
 
+    /// <summary>Verifies that deeply nested containers produce the correct hierarchy.</summary>
     [Fact]
     public void Build_NestedContainers_CreatesCorrectHierarchy()
     {
@@ -73,6 +77,7 @@ public class SgmlTreeBuilderTests
         Assert.Equal("value", builder.Root.Children[0].Children[0].Value);
     }
 
+    /// <summary>Verifies that an empty token list produces a null root node.</summary>
     [Fact]
     public void Build_EmptyTokens_NoRoot()
     {

@@ -2,10 +2,12 @@ using OfxFileReader.Models.Common.Enums;
 
 namespace OfxFileReader.Tests.Integration;
 
+/// <summary>Banking scenario integration tests covering various OFX edge cases.</summary>
 public class OfxReaderBankingScenarioTests
 {
     private static readonly string FixturesDir = Path.Combine(AppContext.BaseDirectory, "Fixtures");
 
+    /// <summary>Verifies that a file with all message set types is parsed completely.</summary>
     [Fact]
     public void Read_FullMultiType_ParsesAllMessageSets()
     {
@@ -27,6 +29,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(4, doc.Metadata.StatementCount);
     }
 
+    /// <summary>Verifies that all 17 transaction types are mapped correctly.</summary>
     [Fact]
     public void Read_AllTransactionTypes_AllMappedCorrectly()
     {
@@ -59,6 +62,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(TransactionType.Other, txns[16].Type);
     }
 
+    /// <summary>Verifies that sign-on error status codes are detected and parsed.</summary>
     [Fact]
     public void Read_ErrorStatus_DetectsSignonError()
     {
@@ -73,6 +77,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal("Invalid user ID or password", doc.SignOn.Status.Message);
     }
 
+    /// <summary>Verifies that corrected/reversal transaction fields are parsed correctly.</summary>
     [Fact]
     public void Read_CorrectedTransactions_ParsesReversalFields()
     {
@@ -91,6 +96,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal("RER", reversal.CorrectiveAction);
     }
 
+    /// <summary>Verifies that multi-currency transactions with exchange rates are parsed correctly.</summary>
     [Fact]
     public void Read_MultiCurrency_ParsesCurrencyFields()
     {
@@ -112,6 +118,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(0.79m, gbpTxn.CurrencyRate);
     }
 
+    /// <summary>Verifies that negative (overdrawn) balances are parsed correctly.</summary>
     [Fact]
     public void Read_NegativeBalance_ParsesOverdrawn()
     {
@@ -125,6 +132,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(-135.00m, doc.BankStatements[0].LedgerBalance.Amount);
     }
 
+    /// <summary>Verifies that loan escrow amounts are parsed correctly.</summary>
     [Fact]
     public void Read_LoanEscrow_ParsesEscrowAmount()
     {
@@ -146,6 +154,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(4500.00m, loan.InterestYearToDate);
     }
 
+    /// <summary>Verifies that a file with only sign-on and no statements is handled.</summary>
     [Fact]
     public void Read_OnlySignon_NoStatements()
     {
@@ -163,6 +172,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(0, doc.Metadata.TransactionCount);
     }
 
+    /// <summary>Verifies that a statement without a ledger balance is handled.</summary>
     [Fact]
     public void Read_NoBalance_StatementWithoutLedger()
     {
@@ -175,6 +185,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Null(doc.BankStatements[0].LedgerBalance);
     }
 
+    /// <summary>Verifies that a file with only credit card data and no sign-on is handled.</summary>
     [Fact]
     public void Read_OnlyCreditCard_NoSignon()
     {
@@ -188,6 +199,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Single(doc.CreditCardStatements);
     }
 
+    /// <summary>Verifies that an empty transaction list results in zero transactions.</summary>
     [Fact]
     public void Read_EmptyBankTranList_ZeroTransactions()
     {
@@ -200,6 +212,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Empty(doc.BankStatements[0].Transactions);
     }
 
+    /// <summary>Verifies that credit line accounts are mapped to LineOfCredit type.</summary>
     [Fact]
     public void Read_CreditLineAccount_MapsToLineOfCredit()
     {
@@ -212,6 +225,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(AccountType.LineOfCredit, doc.BankStatements[0].Account.AccountType);
     }
 
+    /// <summary>Verifies that available dates and user dates are parsed correctly.</summary>
     [Fact]
     public void Read_AvailableDates_ParsesCorrectly()
     {
@@ -237,6 +251,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(1, dateUser.Day);
     }
 
+    /// <summary>Verifies that money market accounts are mapped correctly.</summary>
     [Fact]
     public void Read_MoneyMarketAccount_MapsCorrectly()
     {
@@ -249,6 +264,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal(AccountType.MoneyMarket, doc.BankStatements[0].Account.AccountType);
     }
 
+    /// <summary>Verifies that duplicate FITID values do not cause data loss — both transactions are preserved.</summary>
     [Fact]
     public void Read_DuplicateFitId_BothTransactionsPreserved()
     {
@@ -263,6 +279,7 @@ public class OfxReaderBankingScenarioTests
         Assert.Equal("DUP-001", doc.BankStatements[0].Transactions[1].FitId);
     }
 
+    /// <summary>Verifies that the async read method works with a TextReader.</summary>
     [Fact]
     public async Task ReadAsync_FromTextReader_Works()
     {
@@ -277,6 +294,7 @@ public class OfxReaderBankingScenarioTests
         Assert.NotNull(doc.BankStatements);
     }
 
+    /// <summary>Verifies that the synchronous read method works with a TextReader.</summary>
     [Fact]
     public void Read_FromTextReader_Works()
     {

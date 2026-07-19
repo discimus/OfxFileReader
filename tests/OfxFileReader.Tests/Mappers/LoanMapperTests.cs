@@ -5,10 +5,12 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Tests.Mappers;
 
+/// <summary>Tests for the loan statement SGML mapper.</summary>
 public class LoanMapperTests
 {
     private static readonly IOfxLogger Logger = NullOfxLogger.Instance;
 
+    /// <summary>Helper method to create an SGML node with an optional value.</summary>
     private static SgmlNode CreateNode(string name, string? value = null)
     {
         var node = new SgmlNode(name);
@@ -17,6 +19,7 @@ public class LoanMapperTests
         return node;
     }
 
+    /// <summary>Verifies that a complete valid loan statement SGML node maps correctly.</summary>
     [Fact]
     public void MapStatement_CompleteValid_ReturnsStatement()
     {
@@ -74,6 +77,7 @@ public class LoanMapperTests
         Assert.Equal(3000.00m, result.InterestYearToDate);
     }
 
+    /// <summary>Verifies that a missing loan account node returns null.</summary>
     [Fact]
     public void MapStatement_MissingAccount_ReturnsNull()
     {
@@ -83,6 +87,7 @@ public class LoanMapperTests
         Assert.Null(result);
     }
 
+    /// <summary>Verifies that missing loan info does not crash the mapper.</summary>
     [Fact]
     public void MapStatement_MissingLoanInfo_DoesNotCrash()
     {
@@ -102,6 +107,7 @@ public class LoanMapperTests
         Assert.Null(result.InterestYearToDate);
     }
 
+    /// <summary>Verifies that all loan account types are mapped correctly.</summary>
     [Fact]
     public void MapAccount_LoanTypes_MapsCorrectly()
     {
@@ -111,6 +117,7 @@ public class LoanMapperTests
         Assert.Equal(AccountType.Loan, MapLoanType("UNKNOWN"));
     }
 
+    /// <summary>Helper to map a loan type string using the actual mapper logic.</summary>
     private static AccountType MapLoanType(string loanType)
     {
         var acct = new SgmlNode("LOANACCTFROM");
@@ -126,6 +133,7 @@ public class LoanMapperTests
         return result?.Account.LoanType ?? AccountType.Unknown;
     }
 
+    /// <summary>Verifies that loan transactions missing required fields are skipped.</summary>
     [Fact]
     public void MapTransaction_MissingRequiredFields_SkipsTransaction()
     {

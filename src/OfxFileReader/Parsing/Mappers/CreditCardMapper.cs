@@ -7,8 +7,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Parsing.Mappers;
 
+/// <summary>Maps SGML parse tree nodes for credit card data into domain models.</summary>
 internal static class CreditCardMapper
 {
+    /// <summary>Maps a CCSTMTRS SGML node to a <see cref="CreditCardStatement"/>.</summary>
     public static CreditCardStatement? MapStatement(SgmlNode ccmtrs, IOfxLogger logger)
     {
         try
@@ -57,6 +59,7 @@ internal static class CreditCardMapper
         }
     }
 
+    /// <summary>Maps a CCACCTFROM SGML node to a <see cref="CreditCardAccount"/>.</summary>
     private static CreditCardAccount? MapAccount(SgmlNode? acctNode)
     {
         if (acctNode is null) return null;
@@ -64,6 +67,7 @@ internal static class CreditCardMapper
         return new CreditCardAccount(acctId);
     }
 
+    /// <summary>Maps an STMTTRN SGML node to a <see cref="CreditCardTransaction"/>.</summary>
     private static CreditCardTransaction? MapTransaction(SgmlNode trn, IOfxLogger logger)
     {
         try

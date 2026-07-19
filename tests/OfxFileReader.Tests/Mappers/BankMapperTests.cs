@@ -8,10 +8,12 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Tests.Mappers;
 
+/// <summary>Tests for the bank statement SGML mapper.</summary>
 public class BankMapperTests
 {
     private static readonly IOfxLogger Logger = NullOfxLogger.Instance;
 
+    /// <summary>Helper method to create an SGML node with an optional value.</summary>
     private static SgmlNode CreateNode(string name, string? value = null)
     {
         var node = new SgmlNode(name);
@@ -20,6 +22,7 @@ public class BankMapperTests
         return node;
     }
 
+    /// <summary>Verifies that a complete valid bank statement SGML node maps correctly.</summary>
     [Fact]
     public void MapStatement_CompleteValid_ReturnsStatement()
     {
@@ -69,6 +72,7 @@ public class BankMapperTests
         Assert.Equal(5432.10m, result.LedgerBalance.Amount);
     }
 
+    /// <summary>Verifies that a missing bank account node returns null.</summary>
     [Fact]
     public void MapStatement_MissingBankAcct_ReturnsNull()
     {
@@ -78,6 +82,7 @@ public class BankMapperTests
         Assert.Null(result);
     }
 
+    /// <summary>Verifies that transactions missing required fields are skipped.</summary>
     [Fact]
     public void MapStatement_MissingRequiredFields_SkipsTransaction()
     {
@@ -114,6 +119,7 @@ public class BankMapperTests
         Assert.Equal(-50.00m, result.Transactions[0].Amount);
     }
 
+    /// <summary>Verifies that all bank account types are mapped correctly.</summary>
     [Fact]
     public void MapAccount_AllTypes_MapsCorrectly()
     {
@@ -125,6 +131,7 @@ public class BankMapperTests
         Assert.Equal(AccountType.Unknown, MapAccountType(null));
     }
 
+    /// <summary>Verifies that a null balance node returns null.</summary>
     [Fact]
     public void ParseBalance_NullNode_ReturnsNull()
     {
@@ -132,6 +139,7 @@ public class BankMapperTests
         Assert.Null(result);
     }
 
+    /// <summary>Verifies that a balance node missing the amount field returns null.</summary>
     [Fact]
     public void ParseBalance_MissingAmount_ReturnsNull()
     {
@@ -141,6 +149,7 @@ public class BankMapperTests
         Assert.Null(result);
     }
 
+    /// <summary>Helper to map an account type string using the actual mapper logic.</summary>
     private static AccountType MapAccountType(string? acctType)
     {
         var acctNode = new SgmlNode("BANKACCTFROM");

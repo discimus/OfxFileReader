@@ -2,8 +2,10 @@ using OfxFileReader.Parsing;
 
 namespace OfxFileReader.Tests.Parsing;
 
+/// <summary>Tests for the OFX header parser.</summary>
 public class HeaderParserTests
 {
+    /// <summary>Verifies that a standard SGML-style header is parsed correctly.</summary>
     [Fact]
     public void Parse_SgmlHeader_ReturnsCorrectValues()
     {
@@ -31,6 +33,7 @@ public class HeaderParserTests
         Assert.StartsWith("<OFX>", result.RemainingContent);
     }
 
+    /// <summary>Verifies that an XML declaration-style header is parsed correctly.</summary>
     [Fact]
     public void Parse_XmlDeclarationHeader_ReturnsCorrectValues()
     {
@@ -42,12 +45,14 @@ public class HeaderParserTests
         Assert.True(result.IsXmlDeclaration);
     }
 
+    /// <summary>Verifies that empty content throws an <see cref="InvalidOfxHeaderException"/>.</summary>
     [Fact]
     public void Parse_EmptyContent_ThrowsException()
     {
         Assert.Throws<InvalidOfxHeaderException>(() => HeaderParser.Parse(""));
     }
 
+    /// <summary>Verifies that a minimal header with only OFXHEADER returns default values for other fields.</summary>
     [Fact]
     public void Parse_MinimalHeader_ReturnsDefaults()
     {

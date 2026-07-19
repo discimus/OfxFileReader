@@ -2,11 +2,13 @@ using OfxFileReader.Models.Common.Enums;
 
 namespace OfxFileReader.Tests.Integration;
 
+/// <summary>Integration tests for the OFX reader using real fixture files.</summary>
 public class OfxReaderIntegrationTests
 {
     private static readonly string FixturesDir = Path.Combine(AppContext.BaseDirectory, "Fixtures");
     private readonly OfxReader _reader = new();
 
+    /// <summary>Verifies that a bank statement V1 (SGML) file is parsed correctly.</summary>
     [Fact]
     public void Read_BankStatementV1_ParsesCorrectly()
     {
@@ -47,6 +49,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal(2, savings.Transactions.Count);
     }
 
+    /// <summary>Verifies that a bank statement V2 (XML) file is parsed correctly.</summary>
     [Fact]
     public void Read_BankStatementV2_ParsesCorrectly()
     {
@@ -70,6 +73,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal(-75.25m, debit.Amount);
     }
 
+    /// <summary>Verifies that a credit card V1 file is parsed correctly.</summary>
     [Fact]
     public void Read_CreditCardV1_ParsesCorrectly()
     {
@@ -90,6 +94,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal(TransactionType.Payment, stmt.Transactions[2].Type);
     }
 
+    /// <summary>Verifies that an invalid empty file throws <see cref="InvalidOfxHeaderException"/>.</summary>
     [Fact]
     public void Read_InvalidEmptyFile_ThrowsException()
     {
@@ -97,6 +102,7 @@ public class OfxReaderIntegrationTests
         Assert.Throws<InvalidOfxHeaderException>(() => _reader.Read(path));
     }
 
+    /// <summary>Verifies that a multi-account file with bank and credit card data is parsed correctly.</summary>
     [Fact]
     public void Read_MultiAccount_ParsesAllTypes()
     {
@@ -120,6 +126,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal("5222222222222222", cc.Account.AccountId);
     }
 
+    /// <summary>Verifies that an investment statement V2 file is parsed correctly.</summary>
     [Fact]
     public void Read_InvestmentV2_ParsesCorrectly()
     {
@@ -135,6 +142,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal("888999000", inv.Account.AccountId);
     }
 
+    /// <summary>Verifies that a loan statement V1 file is parsed correctly.</summary>
     [Fact]
     public void Read_LoanV1_ParsesCorrectly()
     {
@@ -158,6 +166,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal(200.00m, tx.InterestAmount);
     }
 
+    /// <summary>Verifies that the async read method works correctly with a cancellation token.</summary>
     [Fact]
     public async Task ReadAsync_WithCancellation_WorksCorrectly()
     {
@@ -170,6 +179,7 @@ public class OfxReaderIntegrationTests
         Assert.NotNull(doc.BankStatements);
     }
 
+    /// <summary>Verifies that reading from a stream produces the same result as from a file path.</summary>
     [Fact]
     public void Read_FromStream_ParsesCorrectly()
     {
@@ -183,6 +193,7 @@ public class OfxReaderIntegrationTests
         Assert.Equal(2, doc.BankStatements.Count);
     }
 
+    /// <summary>Verifies that reading a non-existent file throws <see cref="FileNotFoundException"/>.</summary>
     [Fact]
     public void Read_FileNotFound_ThrowsFileNotFoundException()
     {

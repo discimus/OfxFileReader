@@ -1,9 +1,12 @@
 namespace OfxFileReader.Parsing.Sgml;
 
+/// <summary>Builds a hierarchical SGML parse tree from a sequence of tokens.</summary>
 internal sealed class SgmlTreeBuilder
 {
+    /// <summary>Gets the root node of the built parse tree, or null if empty.</summary>
     public SgmlNode? Root { get; private set; }
 
+    /// <summary>Builds the parse tree from the given list of tokens.</summary>
     public void Build(List<SgmlToken> tokens)
     {
         Root = null;

@@ -2,8 +2,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Tests.Parsing;
 
+/// <summary>Tests for the SGML tokenizer functionality.</summary>
 public class SgmlTokenizerTests
 {
+    /// <summary>Verifies that simple open/close tags with text are tokenized correctly.</summary>
     [Fact]
     public void Tokenize_SimpleTags_ReturnsCorrectTokens()
     {
@@ -20,6 +22,7 @@ public class SgmlTokenizerTests
         Assert.Equal("TAG1", tokens[2].Value);
     }
 
+    /// <summary>Verifies that nested tags produce the correct sequence of tokens.</summary>
     [Fact]
     public void Tokenize_NestedTags_ReturnsCorrectTokens()
     {
@@ -40,6 +43,7 @@ public class SgmlTokenizerTests
         Assert.Equal("OUTER", tokens[4].Value);
     }
 
+    /// <summary>Verifies that unclosed tags are handled without throwing.</summary>
     [Fact]
     public void Tokenize_UnclosedTags_HandlesGracefully()
     {
@@ -50,6 +54,7 @@ public class SgmlTokenizerTests
         Assert.Equal(4, tokens.Count);
     }
 
+    /// <summary>Verifies that empty input produces an empty token list.</summary>
     [Fact]
     public void Tokenize_EmptyInput_ReturnsEmpty()
     {
@@ -58,6 +63,7 @@ public class SgmlTokenizerTests
         Assert.Empty(tokens);
     }
 
+    /// <summary>Verifies that line numbers are tracked correctly across newlines.</summary>
     [Fact]
     public void Tokenize_WithNewlines_MaintainsLineNumbers()
     {

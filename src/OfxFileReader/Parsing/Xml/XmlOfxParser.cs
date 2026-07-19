@@ -14,15 +14,18 @@ using OfxFileReader.Parsing.Mappers;
 
 namespace OfxFileReader.Parsing.Xml;
 
+/// <summary>Parses XML-format OFX content into an <see cref="OfxDocument"/>.</summary>
 internal sealed class XmlOfxParser
 {
     private readonly IOfxLogger _logger;
 
+    /// <summary>Initializes a new instance with an optional logger.</summary>
     public XmlOfxParser(IOfxLogger? logger = null)
     {
         _logger = logger ?? NullOfxLogger.Instance;
     }
 
+    /// <summary>Parses XML OFX content into a structured document.</summary>
     public OfxDocument Parse(string content)
     {
         var headerResult = HeaderParser.Parse(content);
@@ -86,28 +89,33 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Gets the first child element with the specified local name (case-insensitive).</summary>
     private static XElement? GetChild(XElement parent, string name)
     {
         return parent.Elements().FirstOrDefault(e =>
             string.Equals(e.Name.LocalName, name, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>Gets all child elements with the specified local name (case-insensitive).</summary>
     private static IEnumerable<XElement> GetChildren(XElement parent, string name)
     {
         return parent.Elements().Where(e =>
             string.Equals(e.Name.LocalName, name, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>Gets the trimmed text value of an element, or null if the element is null.</summary>
     private static string? GetValue(XElement? element)
     {
         return element?.Value?.Trim();
     }
 
+    /// <summary>Gets the trimmed text value of the first child element with the specified name.</summary>
     private static string? GetChildValue(XElement parent, string name)
     {
         return GetValue(GetChild(parent, name));
     }
 
+    /// <summary>Parses the sign-on response section from the OFX XML element.</summary>
     private SignOnResponse? ParseSignOn(XElement ofx)
     {
         var signonMsgs = GetChild(ofx, "SIGNONMSGSRSV1");
@@ -123,6 +131,7 @@ internal sealed class XmlOfxParser
         return MapSignOn(sonrs);
     }
 
+    /// <summary>Maps a SONRS XML element to a <see cref="SignOnResponse"/>.</summary>
     private SignOnResponse MapSignOn(XElement sonrs)
     {
         var statusNode = GetChild(sonrs, "STATUS");
@@ -148,6 +157,7 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Parses bank statement sections from the OFX XML element.</summary>
     private List<BankStatement>? ParseBankStatements(XElement ofx)
     {
         var bankMsgs = GetChild(ofx, "BANKMSGSRSV1");
@@ -166,6 +176,7 @@ internal sealed class XmlOfxParser
         return statements;
     }
 
+    /// <summary>Maps an STMTRS XML element to a <see cref="BankStatement"/>.</summary>
     private BankStatement? MapBankStatement(XElement stmtrs, XElement parent)
     {
         try
@@ -210,6 +221,7 @@ internal sealed class XmlOfxParser
         }
     }
 
+    /// <summary>Parses a BANKACCTFROM XML element into a <see cref="BankAccount"/>.</summary>
     private BankAccount? ParseBankAccount(XElement? acct)
     {
         if (acct is null) return null;
@@ -230,6 +242,7 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Maps an STMTTRN XML element to a <see cref="BankTransaction"/>.</summary>
     private BankTransaction? MapBankTransaction(XElement trn)
     {
         var amount = OfxAmountConverter.Parse(GetChildValue(trn, "TRNAMT"));
@@ -256,6 +269,7 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Parses credit card statement sections from the OFX XML element.</summary>
     private List<CreditCardStatement>? ParseCreditCardStatements(XElement ofx)
     {
         var ccMsgs = GetChild(ofx, "CREDITCARDMSGSRSV1");
@@ -274,6 +288,7 @@ internal sealed class XmlOfxParser
         return statements;
     }
 
+    /// <summary>Maps a CCSTMTRS XML element to a <see cref="CreditCardStatement"/>.</summary>
     private CreditCardStatement? MapCreditCardStatement(XElement ccmtrs, XElement parent)
     {
         try
@@ -334,6 +349,7 @@ internal sealed class XmlOfxParser
         }
     }
 
+    /// <summary>Parses investment statement sections from the OFX XML element.</summary>
     private List<InvestmentStatement>? ParseInvestmentStatements(XElement ofx)
     {
         var invMsgs = GetChild(ofx, "INVSTMTMSGSRSV1");
@@ -359,6 +375,7 @@ internal sealed class XmlOfxParser
         return statements;
     }
 
+    /// <summary>Maps an INVSTMTRS XML element to an <see cref="InvestmentStatement"/>.</summary>
     private InvestmentStatement? MapInvestmentStatement(XElement invmtrs, XElement parent)
     {
         var asOfDate = OfxDateConverter.Parse(GetChildValue(invmtrs, "DTASOF")) ?? DateTimeOffset.MinValue;
@@ -453,6 +470,7 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Maps an investment transaction XML element to an <see cref="InvestmentTransaction"/>.</summary>
     private static InvestmentTransaction? MapInvestmentTransactionFromXml(XElement trn, IOfxLogger logger)
     {
         try
@@ -504,6 +522,7 @@ internal sealed class XmlOfxParser
         }
     }
 
+    /// <summary>Maps an INVPOS XML element to an <see cref="InvestmentPosition"/>.</summary>
     private static InvestmentPosition MapPositionFromXml(XElement pos)
     {
         var secIdNode = GetChild(pos, "SECID");
@@ -522,6 +541,7 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Parses loan statement sections from the OFX XML element.</summary>
     private List<LoanStatement>? ParseLoanStatements(XElement ofx)
     {
         var loanMsgs = GetChild(ofx, "LOANMSGSRSV1");
@@ -547,6 +567,7 @@ internal sealed class XmlOfxParser
         return statements;
     }
 
+    /// <summary>Maps a LOANSTMTRS XML element to a <see cref="LoanStatement"/>.</summary>
     private LoanStatement? MapLoanStatementFromXml(XElement loanmtrs, XElement parent)
     {
         var currency = GetChildValue(loanmtrs, "CURDEF") ?? "USD";
@@ -630,6 +651,7 @@ internal sealed class XmlOfxParser
         );
     }
 
+    /// <summary>Parses a balance element XML node into a <see cref="Balance"/>.</summary>
     private static Balance? ParseBalanceElement(XElement? balNode)
     {
         if (balNode is null) return null;

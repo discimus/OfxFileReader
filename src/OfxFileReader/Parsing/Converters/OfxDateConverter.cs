@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace OfxFileReader.Parsing.Converters;
 
+/// <summary>Provides helper methods for converting OFX date strings to <see cref="DateTimeOffset"/> values.</summary>
 internal static partial class OfxDateConverter
 {
     private static readonly Dictionary<string, int> KnownTimeZones = new(StringComparer.OrdinalIgnoreCase)
@@ -14,12 +15,15 @@ internal static partial class OfxDateConverter
         ["GMT"] = 0,  ["UTC"] = 0
     };
 
+    /// <summary>Regex for timezone format with optional offset and name (e.g., -5:EST).</summary>
     [GeneratedRegex(@"^([+-]?\d{1,2}):([A-Za-z]+)$")]
     private static partial Regex TimezoneWithNameRegex();
 
+    /// <summary>Regex for timezone numeric offset (e.g., -5, +2).</summary>
     [GeneratedRegex(@"^[+-]?\d{1,2}$")]
     private static partial Regex TimezoneOffsetRegex();
 
+    /// <summary>Parses an OFX date string into a <see cref="DateTimeOffset"/>.</summary>
     public static DateTimeOffset? Parse(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -69,6 +73,7 @@ internal static partial class OfxDateConverter
         }
     }
 
+    /// <summary>Parses a timezone string into a <see cref="TimeSpan"/> offset.</summary>
     private static TimeSpan ParseTimezonePart(string tzPart)
     {
         if (string.IsNullOrWhiteSpace(tzPart))

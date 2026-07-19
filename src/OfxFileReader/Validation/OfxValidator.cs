@@ -3,8 +3,10 @@ using OfxFileReader.Models.Common.Enums;
 
 namespace OfxFileReader.Validation;
 
+/// <summary>Validates parsed OFX documents for required fields and data integrity.</summary>
 public sealed class OfxValidator : IOfxValidator
 {
+    /// <summary>Validates the OFX document and returns a list of validation error messages.</summary>
     public IReadOnlyList<string> Validate(OfxDocument document)
     {
         var errors = new List<string>();
@@ -54,6 +56,7 @@ public sealed class OfxValidator : IOfxValidator
         return errors.AsReadOnly();
     }
 
+    /// <summary>Returns whether the OFX document is valid.</summary>
     public bool IsValid(OfxDocument document)
     {
         return Validate(document).Count == 0;

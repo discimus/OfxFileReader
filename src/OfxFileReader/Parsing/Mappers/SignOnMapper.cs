@@ -6,8 +6,10 @@ using OfxFileReader.Parsing.Sgml;
 
 namespace OfxFileReader.Parsing.Mappers;
 
+/// <summary>Maps SGML parse tree nodes for sign-on data into domain models.</summary>
 internal static class SignOnMapper
 {
+    /// <summary>Maps a SONRS SGML node to a <see cref="SignOnResponse"/>.</summary>
     public static SignOnResponse Map(SgmlNode sonrs, IOfxLogger logger)
     {
         var status = ParseStatus(sonrs.FindChild("STATUS"), logger);
@@ -32,6 +34,7 @@ internal static class SignOnMapper
         );
     }
 
+    /// <summary>Parses a STATUS SGML node into a <see cref="Status"/> object.</summary>
     public static Status ParseStatus(SgmlNode? statusNode, IOfxLogger logger)
     {
         if (statusNode is null)
