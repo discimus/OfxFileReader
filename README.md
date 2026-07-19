@@ -1,5 +1,7 @@
 # OfxFileReader
 
+ℹ️ Disclosure: This application was developed using AI (vibecoding).
+
 Class library .NET 8 para leitura e parsing de arquivos OFX (Open Financial Exchange).
 
 Suporta **OFX 1.x (SGML)** e **OFX 2.x (XML)** com detecção automática de formato.
